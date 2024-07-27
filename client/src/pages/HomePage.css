@@ -1,0 +1,45 @@
+/* src/pages/HomePage.css */
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Espacio entre las cards, ajusta según tus necesidades */
+    justify-content: center; /* Centra las cards en el contenedor */
+  }
+  
+  .filters {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+  }
+  
+  .filters select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .pagination {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+  }
+  
+  .page-item {
+    margin: 0 5px;
+  }
+  
+  .page-link {
+    cursor: pointer;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .page-link:hover {
+    background-color: #e9e9e9;
+  }

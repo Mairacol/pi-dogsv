@@ -1,0 +1,94 @@
+/* src/pages/DetailPage.css */
+.detail-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    background: #f0f0f0; /* Fondo gris claro */
+    min-height: 100vh;
+  }
+  
+  .dog-detail-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 700px;
+    width: 100%;
+    border-radius: 20px;
+    background: #ffffff;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+    border: 1px solid #ddd; /* Borde sutil */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    position: relative; /* Para el botón flotante */
+  }
+  
+  .dog-detail-image-container {
+    width: 100%;
+    padding-top: 60%; /* Mantiene la proporción de 16:9 (ajustar según la imagen) */
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  
+  .dog-detail-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Mantiene la imagen entera sin recortar */
+  }
+  
+  .dog-detail-info {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .dog-detail-info h2 {
+    font-size: 32px;
+    color: #333;
+    margin-bottom: 10px;
+    font-family: 'Poppins', sans-serif; /* Tipografía moderna */
+  }
+  
+  .dog-detail-info p {
+    font-size: 18px;
+    color: #666;
+    margin: 8px 0;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .back-button {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 50px; /* Botón redondeado */
+    background-color: #ff6f61; /* Color vibrante */
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Sombra suave para el botón */
+  }
+  
+  .back-button:hover {
+    background-color: #e65c5c;
+    transform: scale(1.05);
+  }
+  
+  .dog-detail-card::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
+    background: linear-gradient(145deg, #ffffff, #e0e0e0);
+    border-radius: 20px;
+    z-index: -1;
+    filter: blur(30px);
+  }
+  

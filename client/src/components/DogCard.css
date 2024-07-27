@@ -1,0 +1,48 @@
+/* src/components/DogCard.css */
+.dog-card {
+    width: 300px; /* Ajusta según tus necesidades */
+    height: 400px; /* Ajusta según tus necesidades */
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    margin: 10px;
+}
+
+.dog-card-image-container {
+    width: 100%;
+    height: 60%; /* Ajusta según tus necesidades */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0; /* Color de fondo para el espacio vacío */
+    position: relative;
+    overflow: hidden; /* Asegura que la imagen no se desborde del contenedor */
+}
+
+.dog-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: fill; /* Ajusta la imagen para llenar el contenedor */
+}
+
+.dog-card-content {
+    padding: 15px;
+    text-align: center;
+    flex: 1;
+}
+
+.dog-card-content h3 {
+    font-size: 1.4em;
+    margin: 10px 0;
+}
+
+.dog-card-content p {
+    margin: 5px 0;
+    font-size: 1em;
+    color: #666;
+}
