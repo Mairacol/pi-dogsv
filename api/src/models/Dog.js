@@ -29,7 +29,17 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-  });
+  origin: {
+    type: DataTypes.STRING,
+    defaultValue: 'DB', // Asume que es de la base de datos por defecto
+  },
+temperaments: {
+  type: DataTypes.JSON, // Campo JSON para almacenar los temperamentos
+  allowNull: true,
+}
+  }, {});
+
+  return sequelize.models.Dog;
 };
 
  

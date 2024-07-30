@@ -13,11 +13,26 @@
   }
   
   .filters select {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 30px;
+    background-color: #fff; /* Fondo blanco */
+    color: #333; /* Color del texto */
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Sombra para un efecto tridimensional */
+    transition: all 0.3s ease;
+    outline: none;
   }
+  
+  .filters select:hover {
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3); /* Sombra más intensa al pasar el mouse */
+  }
+  
+  .filters select:focus {
+    box-shadow: 0 0 5px rgba(206, 100, 8, 0.5); /* Sombra al enfocar */
+  }
+  
   
   .pagination {
     display: flex;
@@ -42,4 +57,27 @@
   
   .page-link:hover {
     background-color: #e9e9e9;
+  }
+  .create-breed-button {
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(135deg, #ff00ff, #72e3b0); /* Degradado de fucsia a verde */
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    margin: 4px 2px;
+  }
+  
+  .create-breed-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
+  }
+  
+  .create-breed-button:active {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   }

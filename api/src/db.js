@@ -1,13 +1,19 @@
-//db.js
 require('dotenv').config();
 const { Sequelize } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
 const {
-  DB_USER, DB_PASSWORD, DB_HOST, DB_NAME,
+  DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DB_PORT,
 } = process.env;
 
-const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`, {
+// Imprimir variables de entorno para verificar que están cargadas correctamente
+console.log('DB User:', DB_USER);
+console.log('DB Password:', DB_PASSWORD);
+console.log('DB Host:', DB_HOST);
+console.log('DB Name:', DB_NAME);
+console.log('DB Port:', DB_PORT || 'default: 5432'); // Valor por defecto si no está definido
+
+const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT || 5432}/${DB_NAME}`, {
   logging: false, // Puedes cambiar esto a `console.log` para habilitar el registro de consultas SQL
   native: false,
 });

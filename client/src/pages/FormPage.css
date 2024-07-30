@@ -1,36 +1,109 @@
-/* src/pages/FormPage.css */
-.form-page {
+/* Estilos específicos para la página del formulario */
+.form-page .form-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center; /* Centra el formulario horizontalmente */
+    justify-content: center; /* Centra el formulario verticalmente */
+    height: 100vh; /* Asegura que el contenedor ocupe toda la altura de la ventana */
     padding: 20px;
+    box-sizing: border-box;
+    background-color: #fff; /* Asegura que el fondo sea blanco */
+ }
+  
+  .form-page h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 2rem;
   }
   
   .form-page form {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: 600px;
+    max-width: 600px; /* Limita el ancho del formulario */
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px; /* Aumenta el radio para bordes más suaves */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada y difusa */
+    box-sizing: border-box;
   }
   
-  .form-page label {
-    margin-bottom: 10px;
-  }
-  
-  .form-page input {
-    margin-top: 5px;
-    padding: 8px;
+  .form-page .form-group {
+    margin-bottom: 20px;
     width: 100%;
   }
   
-  .temperaments {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+  .form-page label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
   }
   
-  .temperaments label {
-    display: flex;
-    align-items: center;
+  .form-page input[type="text"],
+  .form-page input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid #5ce6a1; /* Línea de color principal */
+    border-radius: 0;
+    box-sizing: border-box;
+    font-size: 1rem;
+    background-color: transparent;
+  }
+  
+  .form-page input[type="text"]:focus {
+    border-bottom: 2px solid #c03b3b; /* Línea más oscura al enfocar */
+    outline: none;
+  }
+  
+  .form-page input[type="file"] {
+    padding: 0;
+    border: none;
+  }
+  
+  /* Estilo del botón de submit con gradiente y sombras */
+  .form-page .submit-button {
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(135deg, #ff00ff, #72e3b0); /* Degradado de fucsia a verde */
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    margin: 4px 2px;
+  }
+  
+  .form-page .submit-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
+  }
+  
+  .form-page .submit-button:active {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .form-page .error {
+    color: red;
+    font-size: 0.875rem;
+    margin-top: 5px;
+  }
+  
+  .form-page .notification {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #d4edda;
+    color: #155724;
+    padding: 10px;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+    text-align: center;
   }
   

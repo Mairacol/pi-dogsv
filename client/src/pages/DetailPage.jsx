@@ -1,4 +1,3 @@
-// src/pages/DetailPage.jsx
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDogById } from '../redux/slices/dogsSlice';
@@ -12,6 +11,7 @@ const DetailPage = () => {
   const { id } = useParams();
   const dog = useSelector((state) => state.dogs.selectedDog);
   const status = useSelector((state) => state.dogs.status);
+  const error = useSelector((state) => state.dogs.error);
 
   useEffect(() => {
     if (id) {
@@ -24,7 +24,7 @@ const DetailPage = () => {
   }
 
   if (status === 'failed') {
-    return <div>Error loading dog</div>;
+    return <div>Error loading dog: {error}</div>;
   }
 
   if (!dog) {
@@ -32,11 +32,14 @@ const DetailPage = () => {
   }
 
   const handleBackClick = () => {
-    console.log(location.state);
     const from = location.state?.from || '/home'; // Redirige a la página de origen
     const page = location.state?.page || 1; // Usa la página guardada en el estado o por defecto 1
     navigate(from, { state: { page } }); // Redirige a la página anterior con el estado de la página
   };
+
+  const temperaments = Array.isArray(dog.temperament) 
+    ? dog.temperament.join(', ') 
+    : dog.temperament || 'No temperament available';
 
   return (
     <div className="detail-page">
@@ -55,7 +58,7 @@ const DetailPage = () => {
           <p>ID: {dog.id}</p>
           <p>Height: {dog.height.metric} cm</p>
           <p>Weight: {dog.weight.metric} kg</p>
-          <p>Temperaments: {dog.temperament}</p>
+          <p>Temperaments: {temperaments}</p>
           <p>Life Span: {dog.life_span}</p>
         </div>
         <button className="back-button" onClick={handleBackClick}>

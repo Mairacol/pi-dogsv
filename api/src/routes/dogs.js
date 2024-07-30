@@ -1,11 +1,21 @@
+//src/routes/dogs
 const { Router } = require('express');
 const { Dog, Temperament } = require('../db');
 const axios = require('axios');
 const { Sequelize } = require('sequelize');
 const { v4: uuidv4 } = require('uuid');
+const path = require('path');
+const cors = require('cors');
+//const { default: dogsSlice } = require('../../../client/src/redux/slices/dogsSlice');
 
 const router = Router();
 
+// Configuración de CORS
+router.use(cors({
+    origin: 'http://localhost:5173', // URL de tu cliente
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type'],
+}));
 // Función para obtener un perro desde la base de datos
 const getDogFromDB = async (id) => {
     try {
@@ -24,6 +34,7 @@ const getDogFromDB = async (id) => {
                 weight: dog.weight,
                 life_span: dog.lifeSpan,
                 temperaments: dog.Temperaments ? dog.Temperaments.map(t => t.name) : [],
+                image: dog.image,
             };
         } else {
             return null;
@@ -75,7 +86,16 @@ router.get('/name', async (req, res) => {
         });
         console.log('Dogs from DB:', dogsFromDb);
 
-        const allDogs = [...dogsFromApi, ...dogsFromDb];
+        const allDogs = [...dogsFromApi, ...dogsFromDb.map(dog => ({
+            id: dog.id,
+            name: dog.name,
+            height: dog.height,
+            weight: dog.weight,
+            life_span: dog.lifeSpan,
+            temperaments: dog.Temperaments.map(t => t.name).join(', '),
+            image: dog.image,
+            created: true, // Añadir este campo para distinguir los perros creados
+        }))];
 
         if (allDogs.length > 0) {
             return res.json(allDogs);
@@ -95,10 +115,27 @@ router.get('/', async (req, res) => {
         const dogsFromApi = apiResponse.data;
 
         const dogsFromDb = await Dog.findAll({
-            include: Temperament,
+            include: {
+                model: Temperament,
+                attributes: ['name'],
+                through: {
+                    attributes: [],
+                },
+            },
         });
 
-        const allDogs = [...dogsFromApi, ...dogsFromDb];
+        const formattedDbDogs = dogsFromDb.map(dog => ({
+            id: dog.id,
+            name: dog.name,
+            height: dog.height,
+            weight: dog.weight,
+            life_span: dog.lifeSpan,
+            temperaments: dog.Temperaments.map(t => t.name).join(', '),
+            image: dog.image,
+            created: true, // Añadir este campo para distinguir los perros creados
+        }));
+
+        const allDogs = [...dogsFromApi, ...formattedDbDogs];
         res.json(allDogs);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -107,68 +144,88 @@ router.get('/', async (req, res) => {
 
 // Ruta para obtener una raza específica por ID
 router.get('/:idRaza', async (req, res) => {
-  const { idRaza } = req.params;
+    const { idRaza } = req.params;
 
-  try {
-      // Intentar obtener el perro de la base de datos
-      let dog = await getDogFromDB(idRaza);
+    try {
+        // Intentar obtener el perro de la base de datos
+        let dog = await getDogFromDB(idRaza);
 
-      if (!dog) {
-          // Si no está en la base de datos, buscar en la API externa
-          const apiResponse = await axios.get(`https://api.thedogapi.com/v1/breeds`);
-          const dogsFromApi = apiResponse.data;
+        if (!dog) {
+            // Si no está en la base de datos, buscar en la API externa
+            const apiResponse = await axios.get(`https://api.thedogapi.com/v1/breeds`);
+            const dogsFromApi = apiResponse.data;
 
-          const dogFromApi = dogsFromApi.find(d => d.id == idRaza);
+            const dogFromApi = dogsFromApi.find(d => d.id == idRaza);
 
-          if (dogFromApi) {
-              dog = {
-                  id: dogFromApi.id,
-                  name: dogFromApi.name,
-                  height: dogFromApi.height.metric,
-                  weight: dogFromApi.weight.metric,
-                  life_span: dogFromApi.life_span,
-                  temperaments: dogFromApi.temperament ? dogFromApi.temperament.split(', ') : [],
-              };
-          }
-      }
+            if (dogFromApi) {
+                dog = {
+                    id: dogFromApi.id,
+                    name: dogFromApi.name,
+                    height: dogFromApi.height.metric,
+                    weight: dogFromApi.weight.metric,
+                    life_span: dogFromApi.life_span,
+                    temperaments: dogFromApi.temperament ? dogFromApi.temperament.split(', ') : [],
+                    image: dogFromApi.image ? dogFromApi.image.url : '',
+                };
+            }
+        }
 
-      if (!dog) {
-          return res.status(404).json({ message: 'Dog not found' });
-      }
+        if (!dog) {
+            return res.status(404).json({ message: 'Dog not found' });
+        }
 
-      res.json(dog);
-  } catch (error) {
-      console.error('Error al obtener el detalle del perro:', error);
-      res.status(500).json({ message: 'Internal server error' });
-  }
+        res.json(dog);
+    } catch (error) {
+        console.error('Error al obtener el detalle del perro:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 });
+
 // Ruta para crear un nuevo perro
 router.post('/', async (req, res) => {
-    const { name, image, height, weight, lifeSpan, temperaments } = req.body;
+    const { name, height, weight, lifeSpan, imageUrl, temperaments } = req.body;
+
+    // Validar si se ha proporcionado la URL de la imagen y otros campos
+    if (!name || !height || !weight || !lifeSpan || !imageUrl|| !temperaments) {
+        return res.status(400).json({ error: 'All fields are required, including the image URL' });
+    }
+
     try {
         // Generar un UUID para el nuevo perro
         const newDogId = uuidv4();
 
+        // Crear el nuevo perro con el campo imageUrl
         const newDog = await Dog.create({
-            id: newDogId, // Asegúrate de usar el UUID aquí
+            id: newDogId,
             name,
-            image,
+            image: imageUrl, // Asigna la URL de la imagen aquí
             height,
             weight,
             lifeSpan,
+            temperaments, 
         });
 
+        // Asegúrate de que temperaments sea un arreglo
+        const temperamentArray = Array.isArray(temperaments) ? temperaments : temperaments.split(',').map(temp => temp.trim());
+
+        // Buscar los temperamentos en la base de datos
         const temperamentInstances = await Temperament.findAll({
-            where: { name: temperaments },
+            where: {
+                name: temperamentArray
+            }
         });
 
+        // Asociar los temperamentos con el nuevo perro
         await newDog.addTemperaments(temperamentInstances);
+
         res.status(201).json(newDog);
     } catch (error) {
+        console.error('Error creating dog:', error);
         res.status(500).json({ error: error.message });
     }
 });
-
 module.exports = router;
+
+
 
 

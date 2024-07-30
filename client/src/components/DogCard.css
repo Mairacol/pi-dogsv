@@ -2,47 +2,61 @@
 .dog-card {
     width: 300px; /* Ajusta según tus necesidades */
     height: 400px; /* Ajusta según tus necesidades */
-    border: 1px solid #ddd;
-    border-radius: 10px;
+    border: none; /* Sin borde */
+    border-radius: 20px; /* Bordes redondeados */
     overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Sombra similar a los botones */
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #fff;
     margin: 10px;
-}
-
-.dog-card-image-container {
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transiciones suaves */
+  }
+  
+  .dog-card:hover {
+    transform: scale(1.05); /* Escala ligeramente al hacer hover */
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3); /* Sombra más profunda al hacer hover */
+  }
+  
+  .dog-card-image-container {
     width: 100%;
     height: 60%; /* Ajusta según tus necesidades */
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f0f0f0; /* Color de fondo para el espacio vacío */
+    background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semitransparente */
     position: relative;
     overflow: hidden; /* Asegura que la imagen no se desborde del contenedor */
-}
-
-.dog-card-image {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+  }
+  
+  .dog-card-image {
     width: 100%;
     height: 100%;
     object-fit: fill; /* Ajusta la imagen para llenar el contenedor */
-}
-
-.dog-card-content {
-    padding: 15px;
+  }
+  
+  .dog-card-content {
+    padding: 20px;
     text-align: center;
     flex: 1;
-}
-
-.dog-card-content h3 {
+    background: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente */
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .dog-card-content h3 {
     font-size: 1.4em;
     margin: 10px 0;
-}
-
-.dog-card-content p {
+    color: #333; /* Color de texto */
+  }
+  
+  .dog-card-content p {
     margin: 5px 0;
     font-size: 1em;
-    color: #666;
-}
+    color: #666; /* Color de texto */
+  }
