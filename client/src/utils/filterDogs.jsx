@@ -50,3 +50,4 @@ export const filterDogs = (dogs, searchTerm, temperamentFilter, originFilter, so
 
     return filtered;
 };
+//funciona sin  database

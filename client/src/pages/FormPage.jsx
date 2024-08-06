@@ -1,5 +1,4 @@
-// FormPage.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './FormPage.css';
 
 const FormPage = () => {
@@ -8,8 +7,8 @@ const FormPage = () => {
     height: '',
     weight: '',
     lifeSpan: '',
-    image: '', // Solo para URLs
-    temperaments: '',
+    image: '',
+    temperaments: [],
   });
 
   const [errors, setErrors] = useState({
@@ -22,6 +21,55 @@ const FormPage = () => {
   });
 
   const [success, setSuccess] = useState(false);
+  const selectRef = useRef(null);
+
+  useEffect(() => {
+    // Inicializar Slim Select después de que el componente haya sido montado
+    const select = new SlimSelect({
+      select: selectRef.current,
+      placeholder: 'Select temperaments',
+      allowDeselect: true,
+      deselectLabel: '<span>&times;</span>',
+      showSearch: true,
+      searchText: 'No Results',
+      searchPlaceholder: 'Search',
+      closeOnSelect: false,
+      maxSelected: 5,
+      afterClose: () => {
+        const selectedOptions = Array.from(selectRef.current.options)
+          .filter(option => option.selected)
+          .map(option => option.value);
+        setFormData({ ...formData, temperaments: selectedOptions });
+      },
+    });
+
+    // Cleanup Slim Select on component unmount
+    return () => {
+      select.destroy();
+    };
+  }, [formData]);
+
+  useEffect(() => {
+    // Fetch temperaments from the server
+    const fetchTemperaments = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/temperaments');
+        const temperaments = await response.json();
+        const selectElement = selectRef.current;
+
+        temperaments.forEach(temperament => {
+          const option = document.createElement('option');
+          option.value = temperament.name;
+          option.text = temperament.name;
+          selectElement.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error fetching temperaments:', error);
+      }
+    };
+
+    fetchTemperaments();
+  }, []);
 
   const validateName = (name) => {
     const nameRegex = /^[A-Za-z\s]+$/;
@@ -32,25 +80,24 @@ const FormPage = () => {
 
   const validateHeight = (height) => {
     const heightNum = parseFloat(height);
-    if (isNaN(heightNum) || heightNum <= 0 || heightNum > 200) return 'Height must be a number between 1 and 200 cm';
+    if (isNaN(heightNum) || heightNum <= 0 || heightNum > 200) return 'Height must be between 1 and 200 cm';
     return '';
   };
 
   const validateWeight = (weight) => {
     const weightNum = parseFloat(weight);
-    if (isNaN(weightNum) || weightNum <= 0 || weightNum > 99) return 'Weight must be a number between 1 and 99 kg';
+    if (isNaN(weightNum) || weightNum <= 0 || weightNum > 100) return 'Weight must be between 1 and 100 kg';
     return '';
   };
 
   const validateLifeSpan = (lifeSpan) => {
     const lifeSpanNum = parseInt(lifeSpan, 10);
-    if (isNaN(lifeSpanNum) || lifeSpanNum <= 0 || lifeSpanNum > 30) return 'Life Span must be a number between 1 and 30 years';
+    if (isNaN(lifeSpanNum) || lifeSpanNum <= 0 || lifeSpanNum > 30) return 'Life Span must be between 1 and 30 years';
     return '';
   };
 
   const validateTemperaments = (temperaments) => {
-    const tempArray = temperaments.split(',').map(temp => temp.trim()).filter(temp => temp.length > 0);
-    if (tempArray.length === 0) return 'At least one temperament must be selected';
+    if (temperaments.length < 1 || temperaments.length > 5) return 'You must select between 1 and 5 temperaments';
     return '';
   };
 
@@ -94,8 +141,8 @@ const FormPage = () => {
       height: formData.height,
       weight: formData.weight,
       lifeSpan: formData.lifeSpan,
-      imageUrl: formData.image, // Enviar solo la URL
-      temperaments: formData.temperaments.split(',').map(temp => temp.trim()), // Enviar como arreglo
+      imageUrl: formData.image,
+      temperaments: formData.temperaments,
     };
 
     try {
@@ -119,7 +166,7 @@ const FormPage = () => {
         weight: '',
         lifeSpan: '',
         image: '',
-        temperaments: '',
+        temperaments: [],
       });
       setErrors({
         name: '',
@@ -210,29 +257,29 @@ const FormPage = () => {
             {errors.image && <p className="error">{errors.image}</p>}
           </div>
           <div className="form-group">
-            <label htmlFor="temperaments">Temperaments (comma separated)</label>
-            <input
-              type="text"
+            <label htmlFor="temperaments">Temperaments</label>
+            <select
               id="temperaments"
               name="temperaments"
-              value={formData.temperaments}
-              onChange={handleChange}
+              ref={selectRef}
+              multiple
               required
-            />
+            ></select>
             {errors.temperaments && <p className="error">{errors.temperaments}</p>}
           </div>
           <button type="submit" className="submit-button">Create Dog</button>
           <div className='container-back-button'>
-        <a className="submit-button back-home" href="/home">Back</a>  
-      </div>
+            <a className="submit-button back-home" href="/home">Back</a>
+          </div>
         </form>
         {success && <p className="notification">Dog created successfully!</p>}
+        
       </div>
-      
     </div>
-    
   );
 };
 
 export default FormPage;
+
+
 
