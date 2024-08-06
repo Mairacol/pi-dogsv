@@ -222,10 +222,15 @@ const FormPage = () => {
             {errors.temperaments && <p className="error">{errors.temperaments}</p>}
           </div>
           <button type="submit" className="submit-button">Create Dog</button>
+          <div className='container-back-button'>
+        <a className="submit-button back-home" href="/home">Back</a>  
+      </div>
         </form>
         {success && <p className="notification">Dog created successfully!</p>}
       </div>
+      
     </div>
+    
   );
 };
 

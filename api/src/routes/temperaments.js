@@ -26,10 +26,14 @@ router.get('/', async (req, res) => {
     // Obtener todos los temperamentos desde la base de datos
     const allTemperaments = await Temperament.findAll();
 
-    res.json(allTemperaments);
+    // Convertir los resultados a JSON
+    const temperamentsJSON = allTemperaments.map(temperament => temperament.toJSON());
+
+    // Enviar respuesta JSON
+    res.json(temperamentsJSON);
   } catch (error) {
     console.error('Error al obtener temperamentos:', error);
-    res.status(500).send('Error al obtener temperamentos');
+    res.status(500).json({ error: 'Error al obtener temperamentos' });
   }
 });
 

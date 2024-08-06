@@ -96,9 +96,10 @@ const HomePage = () => {
                 )}
             </div>
             <Pagination 
-                dogsPerPage={dogsPerPage} 
-                totalDogs={filteredDogs.length} 
-                paginate={paginate} 
+                currentPage={currentPage}
+                totalItems={filteredDogs.length}
+                itemsPerPage={dogsPerPage}
+                onPageChange={paginate}
             />
         </div>
     );

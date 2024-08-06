@@ -1,109 +1,235 @@
 /* Estilos específicos para la página del formulario */
 .form-page .form-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Centra el formulario horizontalmente */
-    justify-content: center; /* Centra el formulario verticalmente */
-    height: 100vh; /* Asegura que el contenedor ocupe toda la altura de la ventana */
-    padding: 20px;
-    box-sizing: border-box;
-    background-color: #fff; /* Asegura que el fondo sea blanco */
- }
-  
-  .form-page h1 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
-    font-size: 2rem;
-  }
-  
-  .form-page form {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 600px; /* Limita el ancho del formulario */
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 12px; /* Aumenta el radio para bordes más suaves */
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada y difusa */
-    box-sizing: border-box;
-  }
-  
-  .form-page .form-group {
-    margin-bottom: 20px;
-    width: 100%;
-  }
-  
-  .form-page label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #555;
-  }
-  
-  .form-page input[type="text"],
-  .form-page input[type="file"] {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-bottom: 2px solid #5ce6a1; /* Línea de color principal */
-    border-radius: 0;
-    box-sizing: border-box;
-    font-size: 1rem;
-    background-color: transparent;
-  }
-  
-  .form-page input[type="text"]:focus {
-    border-bottom: 2px solid #c03b3b; /* Línea más oscura al enfocar */
-    outline: none;
-  }
-  
-  .form-page input[type="file"] {
-    padding: 0;
-    border: none;
-  }
-  
-  /* Estilo del botón de submit con gradiente y sombras */
-  .form-page .submit-button {
-    padding: 15px 30px;
-    font-size: 18px;
-    font-weight: bold;
-    color: #fff;
-    background: linear-gradient(135deg, #ff00ff, #72e3b0); /* Degradado de fucsia a verde */
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-    margin: 4px 2px;
-  }
-  
-  .form-page .submit-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
-  }
-  
-  .form-page .submit-button:active {
-    transform: translateY(-1px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  }
-  
-  .form-page .error {
-    color: red;
-    font-size: 0.875rem;
-    margin-top: 5px;
-  }
-  
-  .form-page .notification {
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #d4edda;
-    color: #155724;
-    padding: 10px;
-    border: 1px solid #c3e6cb;
-    border-radius: 5px;
-    text-align: center;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra el formulario horizontalmente */
+  justify-content: center; /* Centra el formulario verticalmente */
+  height: 100vh; /* Asegura que el contenedor ocupe toda la altura de la ventana */
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #f9f9f9; /* Fondo ligeramente gris para contraste */
+}
+
+.form-page h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 2rem;
+}
+
+.form-page form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 600px; /* Limita el ancho del formulario */
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px; /* Aumenta el radio para bordes más suaves */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada y difusa */
+  box-sizing: border-box;
+}
+
+.form-page .form-group {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.form-page label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+}
+
+.form-page input[type="text"],
+.form-page input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-bottom: 2px solid #5ce6a1; /* Línea de color principal */
+  border-radius: 0;
+  box-sizing: border-box;
+  font-size: 1rem;
+  background-color: transparent;
+}
+
+.form-page input[type="text"]:focus {
+  border-bottom: 2px solid #c03b3b; /* Línea más oscura al enfocar */
+  outline: none;
+}
+
+.form-page input[type="file"] {
+  padding: 0;
+  border: none;
+}
+
+/* Estilo del select múltiple */
+.form-group select {
+  width: 100%;
+  height: 40px;
+  margin-top: 10px;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Estilo del botón de envío */
+.form-page .submit-button {
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(135deg, #ff00ff, #72e3b0); /* Degradado de fucsia a verde */
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  margin: 4px 2px;
+}
+
+.form-page .submit-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
+}
+
+.form-page .submit-button:active {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.form-page .error {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 5px;
+}
+
+.form-page .notification {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #d4edda;
+  color: #155724;
+  padding: 10px;
+  border: 1px solid #c3e6cb;
+  border-radius: 5px;
+  text-align: center;
+}
+
+/* Estilos para los temperamentos seleccionados */
+.form-page .selected-temperaments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; /* Añade espacio entre los temperamentos */
+  margin-bottom: 20px;
+}
+
+.form-page .selected-temperament {
+  background-color: #e0ffe0;
+  border: 1px solid #b2ffb2;
+  border-radius: 20px;
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Espacio entre el nombre y el botón de eliminar */
+}
+
+.form-page .selected-temperament span {
+  font-size: 0.875rem; /* Tamaño de fuente ajustado */
+}
+
+.form-page .selected-temperament button {
+  background-color: #c03b3b;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  cursor: pointer;
+  outline: none;
+}
+
+.form-page .selected-temperament button:hover {
+  background-color: #a00;
+}
+
+/* Estilo para las casillas de verificación */
+.form-page .checkbox-group {
+  max-height: 200px; /* Altura máxima del contenedor con desplazamiento */
+  overflow-y: auto; /* Permite el desplazamiento vertical */
+  padding: 10px;
+  border: 1px solid #ddd; /* Borde sutil alrededor del contenedor */
+  border-radius: 8px; /* Bordes redondeados */
+  background-color: #f7f7f7; /* Fondo gris claro para el contenedor */
+}
+
+.form-page .checkbox-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-page .checkbox-item {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.form-page .checkbox-item input[type="checkbox"] {
+  position: relative;
+  width: 20px; /* Ajusta el tamaño de la casilla */
+  height: 20px;
+  appearance: none; /* Elimina los estilos predeterminados del navegador */
+  border: 2px solid #5ce6a1; /* Borde de color principal */
+  border-radius: 4px; /* Bordes redondeados */
+  background-color: #fff; /* Fondo blanco para la casilla */
+  cursor: pointer;
+  outline: none;
+}
+
+.form-page .checkbox-item input[type="checkbox"]:checked {
+  background-color: #5ce6a1; /* Fondo de la casilla cuando está seleccionada */
+  border-color: #5ce6a1; /* Borde de la casilla cuando está seleccionada */
+}
+
+.form-page .checkbox-item input[type="checkbox"]:checked::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px; /* Tamaño del relleno */
+  height: 14px;
+  background-color: #000; /* Color negro para el relleno */
+  border-radius: 2px; /* Ajusta la forma del relleno */
+}
+
+.form-page .checkbox-item input[type="checkbox"]:focus {
+  outline: none;
+}
+
+.form-page .checkbox-item label {
+  margin-left: 8px;
+}
+
+
+.submit-button.back-home {
+  /* Para que el elemento se comporte como un bloque en línea */
+  width: 100%;
+  text-align: center; /* Centra el texto dentro del enlace */
+  margin: 0 auto; /* Aplica márgenes automáticos a los lados */
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 19px;
+}
+
+.container-back-button{
+  display: flex;
+}
+
+

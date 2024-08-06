@@ -186,7 +186,7 @@ router.post('/', async (req, res) => {
     const { name, height, weight, lifeSpan, imageUrl, temperaments } = req.body;
 
     // Validar si se ha proporcionado la URL de la imagen y otros campos
-    if (!name || !height || !weight || !lifeSpan || !imageUrl|| !temperaments) {
+    if (!name || !height || !weight || !lifeSpan || !imageUrl || !temperaments) {
         return res.status(400).json({ error: 'All fields are required, including the image URL' });
     }
 
@@ -198,15 +198,17 @@ router.post('/', async (req, res) => {
         const newDog = await Dog.create({
             id: newDogId,
             name,
-            image: imageUrl, // Asigna la URL de la imagen aquí
+            image: imageUrl,
             height,
             weight,
             lifeSpan,
-            temperaments, 
+            temperaments 
         });
 
         // Asegúrate de que temperaments sea un arreglo
         const temperamentArray = Array.isArray(temperaments) ? temperaments : temperaments.split(',').map(temp => temp.trim());
+
+        console.log('Temperament Array:', temperamentArray); // Depuración
 
         // Buscar los temperamentos en la base de datos
         const temperamentInstances = await Temperament.findAll({
@@ -214,6 +216,12 @@ router.post('/', async (req, res) => {
                 name: temperamentArray
             }
         });
+
+        console.log('Temperament Instances:', temperamentInstances); // Depuración
+
+        if (temperamentInstances.length === 0) {
+            return res.status(404).json({ error: 'Temperaments not found' });
+        }
 
         // Asociar los temperamentos con el nuevo perro
         await newDog.addTemperaments(temperamentInstances);

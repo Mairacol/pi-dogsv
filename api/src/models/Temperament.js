@@ -1,4 +1,5 @@
 // src/models/Temperament.js
+
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {

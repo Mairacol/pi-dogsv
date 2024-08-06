@@ -8,14 +8,11 @@ const DogCard = ({ dogData }) => {
     console.log('Dog Data:', dogData);
 
     // Maneja diferentes formatos de datos para la imagen
-    let imageUrl;
-    if (dogData.image) {
-        imageUrl = dogData.image; // URL de imagen directamente desde la base de datos
-    } else if (dogData.reference_image_id) {
-        imageUrl = `https://cdn2.thedogapi.com/images/${dogData.reference_image_id}.jpg`; // URL de imagen de TheDogAPI
-    } else {
-        imageUrl = 'https://via.placeholder.com/150'; // Imagen de placeholder si no hay URL disponible
-    }
+    const imageUrl = dogData.image 
+        ? dogData.image 
+        : dogData.reference_image_id 
+        ? `https://cdn2.thedogapi.com/images/${dogData.reference_image_id}.jpg` 
+        : 'https://via.placeholder.com/150';
 
     console.log('Image URL:', imageUrl);
 
@@ -29,11 +26,25 @@ const DogCard = ({ dogData }) => {
     console.log('Weight:', weight);
 
     // Maneja la presentación de temperamentos
-    const temperaments = dogData.temperament
+    const temperaments = dogData.temperaments
+        ? Array.isArray(dogData.temperaments)
+            ? dogData.temperaments.join(', ')
+            : typeof dogData.temperaments === 'string'
+            ? dogData.temperaments
+                .replace(/[\[\]"']/g, '') // Elimina caracteres no deseados
+                .split(',')
+                .map(temp => temp.trim())
+                .join(', ')
+            : 'No temperament available'
+        : dogData.temperament
         ? Array.isArray(dogData.temperament)
-            ? dogData.temperament.join(', ') // Si es un array, únelos con comas
+            ? dogData.temperament.join(', ')
             : typeof dogData.temperament === 'string'
-            ? dogData.temperament.split(', ').join(', ') // Si es un string, reemplaza comas
+            ? dogData.temperament
+                .replace(/[\[\]"']/g, '') // Elimina caracteres no deseados
+                .split(',')
+                .map(temp => temp.trim())
+                .join(', ')
             : 'No temperament available'
         : 'No temperament available';
 
@@ -42,7 +53,7 @@ const DogCard = ({ dogData }) => {
     const handleClick = () => {
         navigate(`/dogs/${dogData.id}`);
     };
-  
+
     return (
         <div className="dog-card" onClick={handleClick}>
             <div className="dog-card-image-container">

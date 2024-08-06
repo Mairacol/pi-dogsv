@@ -1,28 +1,30 @@
-// src/components/Pagination.jsx
 import React from 'react';
+import './Pagination.css';
 
-const Pagination = ({ dogsPerPage, totalDogs, paginate }) => {
-    const pageNumbers = [];
-    for (let i = 1; i <= Math.ceil(totalDogs / dogsPerPage); i++) {
-        pageNumbers.push(i);
-    }
+const Pagination = ({ currentPage, totalItems, itemsPerPage, onPageChange }) => {
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    const handlePageClick = (pageNumber) => {
+        onPageChange(pageNumber);
+    };
 
     return (
-        <nav>
-            <ul className="pagination">
-                {pageNumbers.map(number => (
-                    <li key={number} className="page-item">
-                        <button onClick={() => paginate(number)} className="page-link">
-                            {number}
-                        </button>
-                    </li>
-                ))}
-            </ul>
-        </nav>
+        <div className="pagination">
+            {Array.from({ length: totalPages }, (_, index) => (
+                <button
+                    key={index + 1}
+                    className={currentPage === index + 1 ? 'active' : ''}
+                    onClick={() => handlePageClick(index + 1)}
+                >
+                    {index + 1}
+                </button>
+            ))}
+        </div>
     );
 };
 
 export default Pagination;
+
 
 
 

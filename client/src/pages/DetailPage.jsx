@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDogById } from '../redux/slices/dogsSlice';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import './DetailPage.css'; // Asegúrate de que el archivo CSS esté importado
+import './DetailPage.css';
 
 const DetailPage = () => {
   const dispatch = useDispatch();
@@ -32,23 +32,47 @@ const DetailPage = () => {
   }
 
   const handleBackClick = () => {
-    const from = location.state?.from || '/home'; // Redirige a la página de origen
-    const page = location.state?.page || 1; // Usa la página guardada en el estado o por defecto 1
-    navigate(from, { state: { page } }); // Redirige a la página anterior con el estado de la página
+    const from = location.state?.from || '/home';
+    const page = location.state?.page || 1;
+    navigate(from, { state: { page } });
   };
 
-  const temperaments = Array.isArray(dog.temperament) 
-    ? dog.temperament.join(', ') 
-    : dog.temperament || 'No temperament available';
+  // Depuración de los datos del perro
+  console.log('Dog Data:', dog);
+
+  // Manejar temperamentos para ambas fuentes de datos
+  const temperamentsFromApi = dog.temperament 
+    ? dog.temperament.split(', ').map(temp => temp.trim()) 
+    : [];
+
+  const temperamentsFromDb = Array.isArray(dog.temperaments) 
+    ? dog.temperaments 
+    : (typeof dog.temperaments === 'string' ? JSON.parse(dog.temperaments) : []);
+
+  const temperaments = temperamentsFromApi.length > 0 
+    ? temperamentsFromApi 
+    : temperamentsFromDb;
+
+  // Construir la URL de la imagen
+  const imageUrl = dog.image && (dog.image.startsWith('http') || dog.image.startsWith('https'))
+    ? dog.image
+    : (dog.reference_image_id 
+        ? `https://cdn2.thedogapi.com/images/${dog.reference_image_id}.jpg`
+        : 'https://via.placeholder.com/500');
+
+  console.log('Dog Image URL:', imageUrl); // Depuración
+  console.log('Reference Image ID:', dog.reference_image_id); // Depuración
+  console.log('Constructed Image URL:', imageUrl); // Verifica la URL generada
+
+  const height = dog.height?.metric || dog.height || 'Unknown';
+  const weight = dog.weight?.metric || dog.weight || 'Unknown';
 
   return (
     <div className="detail-page">
       <div className="dog-detail-card">
         <div className="dog-detail-image-container">
           <img
-            src={dog.reference_image_id 
-              ? `https://cdn2.thedogapi.com/images/${dog.reference_image_id}.jpg`
-              : 'https://via.placeholder.com/500'}
+            src={imageUrl}
             alt={dog.name}
             className="dog-detail-image"
           />
@@ -56,10 +80,10 @@ const DetailPage = () => {
         <div className="dog-detail-info">
           <h2>{dog.name}</h2>
           <p>ID: {dog.id}</p>
-          <p>Height: {dog.height.metric} cm</p>
-          <p>Weight: {dog.weight.metric} kg</p>
-          <p>Temperaments: {temperaments}</p>
-          <p>Life Span: {dog.life_span}</p>
+          <p>Height: {height} cm</p>
+          <p>Weight: {weight} kg</p>
+          <p>Temperaments: {temperaments.length > 0 ? temperaments.join(', ') : 'No temperament available'}</p>
+          <p>Life Span: {dog.life_span || dog.lifeSpan}</p>
         </div>
         <button className="back-button" onClick={handleBackClick}>
           Back

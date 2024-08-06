@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-// Async thunk to fetch all dogs from both API and database
+// Thunks
+
 export const fetchDogs = createAsyncThunk('dogs/fetchDogs', async () => {
   try {
     const [apiResponse, dbResponse] = await Promise.all([
@@ -20,10 +21,13 @@ export const fetchDogs = createAsyncThunk('dogs/fetchDogs', async () => {
     const dbData = await dbResponse.json();
 
     // Combine and deduplicate data
-    const combinedData = [...apiData, ...dbData];
-    const uniqueData = combinedData.filter((dog, index, self) =>
-      index === self.findIndex((d) => d.id === dog.id)
-    );
+    const combinedData = [...dbData, ...apiData];
+    const uniqueData = combinedData.reduce((acc, dog) => {
+      if (!acc.find(d => d.id === dog.id)) {
+        acc.push(dog);
+      }
+      return acc;
+    }, []);
 
     return uniqueData;
   } catch (error) {
@@ -31,45 +35,66 @@ export const fetchDogs = createAsyncThunk('dogs/fetchDogs', async () => {
   }
 });
 
-// Async thunk to fetch a dog by ID from both API and database
 export const fetchDogById = createAsyncThunk('dogs/fetchDogById', async (id) => {
   try {
-    const apiResponse = await fetch(`https://api.thedogapi.com/v1/breeds/${id}`);
+    const idStr = String(id).trim();
 
-    if (apiResponse.ok) {
-      return apiResponse.json();
+    let response;
+
+    if (idStr.includes('-') && idStr.length === 36) {
+      // ID parece ser un UUID, intenta con la base de datos
+      response = await fetch(`/dogs/${idStr}`);
+      
+      if (response.ok) {
+        return { source: 'db', data: await response.json() };
+      } else {
+        console.log(`Request to database failed with status ${response.status}. Trying API...`);
+      }
     }
 
-    const dbResponse = await fetch(`/dogs/${id}`);
-    if (!dbResponse.ok) {
-      throw new Error('Failed to fetch dog by ID from database');
+    // Si el ID no parece ser un UUID o la solicitud a la base de datos falla, intenta con la API
+    response = await fetch(`https://api.thedogapi.com/v1/breeds/${idStr}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch dog by ID from API');
     }
-    return dbResponse.json();
+    return { source: 'api', data: await response.json() };
   } catch (error) {
     throw new Error(error.message);
   }
 });
 
-// Async thunk to fetch dogs by name from both API and database
 export const fetchDogsByName = createAsyncThunk('dogs/fetchDogsByName', async (name) => {
   try {
     const apiResponse = await fetch(`https://api.thedogapi.com/v1/breeds/search?q=${name}`);
     
     if (apiResponse.ok) {
-      return apiResponse.json();
+      const apiData = await apiResponse.json();
+
+      // Verifica si necesitamos buscar en la base de datos
+      const dbResponse = await fetch(`/dogs?name=${name}`);
+      if (!dbResponse.ok) {
+        throw new Error('Failed to fetch dogs by name from database');
+      }
+
+      const dbData = await dbResponse.json();
+      // Combine y elimina duplicados
+      const combinedData = [...dbData, ...apiData];
+      const uniqueData = combinedData.reduce((acc, dog) => {
+        if (!acc.find(d => d.id === dog.id)) {
+          acc.push(dog);
+        }
+        return acc;
+      }, []);
+
+      return uniqueData;
     }
 
-    const dbResponse = await fetch(`/dogs?name=${name}`);
-    if (!dbResponse.ok) {
-      throw new Error('Failed to fetch dogs by name from database');
-    }
-    return dbResponse.json();
+    throw new Error('Failed to fetch dogs by name from API');
   } catch (error) {
     throw new Error(error.message);
   }
 });
 
-// Async thunk to create a new dog in the database
 export const createDog = createAsyncThunk('dogs/createDog', async (dog) => {
   try {
     const response = await fetch('/dogs', {
@@ -89,13 +114,43 @@ export const createDog = createAsyncThunk('dogs/createDog', async (dog) => {
   }
 });
 
+// Obtener temperamentos
+export const fetchTemperamentsFromApiAndDb = createAsyncThunk('dogs/fetchTemperamentsFromApiAndDb', async () => {
+  try {
+    // Fetch temperaments from API
+    const apiResponse = await fetch('https://api.thedogapi.com/v1/temperaments');
+    if (!apiResponse.ok) {
+      throw new Error('Failed to fetch temperaments from API');
+    }
+    const apiTemperaments = await apiResponse.json();
+
+    // Fetch temperaments from database
+    const dbResponse = await fetch('/temperaments');
+    if (!dbResponse.ok) {
+      throw new Error('Failed to fetch temperaments from database');
+    }
+    const dbTemperaments = await dbResponse.json();
+
+    // Combine and deduplicate temperaments
+    const combinedTemperaments = [...dbTemperaments, ...apiTemperaments];
+    const uniqueTemperaments = Array.from(new Set(combinedTemperaments.map(temp => temp.id)))
+      .map(id => combinedTemperaments.find(temp => temp.id === id));
+
+    return uniqueTemperaments;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+});
+
+// Definición del slice
 const dogsSlice = createSlice({
   name: 'dogs',
   initialState: {
-    dogs: [], // List of all dogs
-    selectedDog: null, // Details of a selected dog
-    status: 'idle', // Fetch status: 'idle', 'loading', 'succeeded', 'failed'
-    error: null, // Error message, if any
+    dogs: [],
+    selectedDog: null,
+    temperaments: [],
+    status: 'idle',
+    error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -105,7 +160,7 @@ const dogsSlice = createSlice({
       })
       .addCase(fetchDogs.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.dogs = action.payload; // Update the list of dogs from both sources
+        state.dogs = action.payload;
       })
       .addCase(fetchDogs.rejected, (state, action) => {
         state.status = 'failed';
@@ -116,7 +171,7 @@ const dogsSlice = createSlice({
       })
       .addCase(fetchDogById.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.selectedDog = action.payload; // Store the selected dog details
+        state.selectedDog = action.payload.data;
       })
       .addCase(fetchDogById.rejected, (state, action) => {
         state.status = 'failed';
@@ -127,7 +182,7 @@ const dogsSlice = createSlice({
       })
       .addCase(fetchDogsByName.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.dogs = action.payload; // Update the list of dogs based on search from both sources
+        state.dogs = action.payload;
       })
       .addCase(fetchDogsByName.rejected, (state, action) => {
         state.status = 'failed';
@@ -138,9 +193,20 @@ const dogsSlice = createSlice({
       })
       .addCase(createDog.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.dogs.push(action.payload); // Add the created dog to the list
+        state.dogs.push(action.payload);
       })
       .addCase(createDog.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+      .addCase(fetchTemperamentsFromApiAndDb.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchTemperamentsFromApiAndDb.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.temperaments = action.payload;
+      })
+      .addCase(fetchTemperamentsFromApiAndDb.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       });
