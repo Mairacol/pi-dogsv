@@ -9,8 +9,23 @@ export const filterDogs = (dogs, searchTerm, temperamentFilter, originFilter, so
 
     // Filtro por temperamento
     if (temperamentFilter) {
-        filtered = filtered.filter(dog => dog.temperament && dog.temperament.includes(temperamentFilter));
+        filtered = filtered.filter(dog => {
+            // Si el temperamento es un array, úsalo directamente. Si es una cadena, divídela en un array.
+            // Asegúrate de manejar tanto el campo `temperament` como `temperaments`.
+            const temperaments = Array.isArray(dog.temperament) 
+                ? dog.temperament 
+                : dog.temperament 
+                    ? dog.temperament.split(', ') 
+                    : Array.isArray(dog.temperaments) 
+                        ? dog.temperaments 
+                        : dog.temperaments 
+                            ? dog.temperaments.split(', ') 
+                            : [];
+    
+            return temperaments.includes(temperamentFilter);
+        });
     }
+    
 
     // Filtro por origen
     if (originFilter) {
@@ -50,4 +65,3 @@ export const filterDogs = (dogs, searchTerm, temperamentFilter, originFilter, so
 
     return filtered;
 };
-//funciona sin  database
