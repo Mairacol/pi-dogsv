@@ -2,15 +2,14 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDogs } from '../redux/slices/dogsSlice';
-import { extractTemperaments } from '../redux/slices/temperamentsSlice'; // Asegúrate de tener esta acción configurada
+import { extractTemperaments } from '../redux/slices/temperamentsSlice';
 import DogCard from '../components/DogCard';
 import SearchBar from '../components/SearchBar';
 import Filters from '../components/Filters';
 import Pagination from '../components/Pagination';
-import { filterDogs } from '../utils/filterDogs'; // Importa la función de filtrado
+import { filterDogs } from '../utils/filterDogs';
 import './HomePage.css';
 import { useNavigate, useLocation } from 'react-router-dom';
-
 
 const HomePage = () => {
     const dispatch = useDispatch();
@@ -30,14 +29,12 @@ const HomePage = () => {
     useEffect(() => {
         if (status === 'idle') {
             dispatch(fetchDogs()).then((response) => {
-                console.log("Fetched dogs:", response.payload); // Verifica los datos obtenidos
                 dispatch(extractTemperaments(response.payload));
             });
         }
     }, [dispatch, status]);
 
     useEffect(() => {
-        // Utiliza la función de filtrado importada
         const filtered = filterDogs(dogs, searchTerm, temperamentFilter, originFilter, sortOrder);
         setFilteredDogs(filtered);
     }, [searchTerm, temperamentFilter, originFilter, sortOrder, dogs]);
@@ -79,8 +76,10 @@ const HomePage = () => {
                     setTemperamentFilter={setTemperamentFilter} 
                     setOriginFilter={setOriginFilter} 
                     setSortOrder={setSortOrder} 
+                    temperamentFilter={temperamentFilter} 
+                    originFilter={originFilter} 
+                    sortOrder={sortOrder} 
                 />
-               
             </div>
             <div className="card-container">
                 {currentDogs.length > 0 ? (

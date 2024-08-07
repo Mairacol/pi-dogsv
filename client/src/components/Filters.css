@@ -1,0 +1,56 @@
+/* src/components/Filters.css */
+.filters {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+  }
+  
+  .custom-select {
+    width: 200px;
+    border-radius: 30px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .custom-select .select__control {
+    background-color: #fff;
+    border: none;
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    transition: all 0.3s ease;
+    padding: 5px 10px;
+  }
+  
+  .custom-select .select__control--is-focused {
+    border: 2px solid #ff00ff;
+    box-shadow: 0 0 5px rgba(206, 100, 8, 0.5);
+  }
+  
+  .custom-select .select__indicator {
+    color: #72e3b0;
+  }
+  
+  .custom-select .select__option {
+    background-color: #fff;
+    color: #333;
+    padding: 10px;
+    font-size: 16px;
+  }
+  
+  .custom-select .select__option--is-selected {
+    background-color: #ff00ff;
+    color: #fff;
+  }
+  
+  .custom-select .select__option--is-focused {
+    background-color: #72e3b0;
+    color: #fff;
+  }
+  
+  .custom-select .select__menu {
+    border-radius: 30px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+  
