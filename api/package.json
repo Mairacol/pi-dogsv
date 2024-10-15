@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon -L",
+    "start": "node index.js",  
+    "build": "cd ../client && npm install && npm run build",
+    "dev": "nodemon -L index.js",
     "test": "mocha -w ./tests/**/*.spec.js"
   },
   "author": "Henry",

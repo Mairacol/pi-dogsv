@@ -1,11 +1,11 @@
-//index.js
 const server = require('./src/app.js');
 const { conn } = require('./src/db.js');
 
-// Syncing all the models at once.
+// Sincronizando todos los modelos
 conn.sync({ force: true }).then(() => {
-  server.listen(3001, () => {
-    console.log('%s listening at 3001'); // eslint-disable-line no-console
+  const PORT = process.env.PORT || 3001; // Usar el puerto proporcionado por Railway
+  server.listen(PORT, () => {
+    console.log(`%s listening at ${PORT}`); // eslint-disable-line no-console
   });
 }).catch(error => {
   console.error('Unable to connect to the database:', error);
