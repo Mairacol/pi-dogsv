@@ -1,0 +1,13 @@
+{
+    "name": "pi-dogsv",
+    "version": "1.0.0",
+    "scripts": {
+      "start": "npm run start --prefix client && node index.js", 
+      "build": "npm run build --prefix client", 
+      "dev": "concurrently \"npm run server\" \"npm run start --prefix client\""
+    },
+    "dependencies": {
+      "concurrently": "^7.6.0"
+    }
+  }
+  
